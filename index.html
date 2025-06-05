@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>City</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    .slider {
+      width: 100%;
+      max-height: 450px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slide-wrapper {
+      position: relative;
+      width: 100%;
+      height: 450px;
+    }
+
+    .slide-wrapper img {
+      position: absolute;
+      top: 0;
+      left: 100%;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: left 0.8s ease-in-out;
+      z-index: 0;
+    }
+
+    .slide-wrapper img.active {
+      left: 0;
+      z-index: 1;
+    }
+
+    .slider button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      background-color: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .slider #prevBtn {
+      left: 10px;
+    }
+
+    .slider #nextBtn {
+      right: 10px;
+    }
+
+    .slider button:hover {
+      background-color: rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <header>
+    <h1>City Boleteria</h1>
+    <nav>
+      <ul class="menu">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="qs.html">Quiénes Somos</a></li>
+        <li><a href="compañias.html">Compañías que Trabajan con Nosotros</a></li>
+        <li><a href="#" id="registroBtn">Registro</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="login.html">Admin</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Slider con botones -->
+    <div class="slider">
+      <div class="slide-wrapper">
+        <img src="mario.jpg" alt="Promoción 1" class="active">
+        <img src="viva.jpg" alt="Promoción 2">
+        <img src="taylor.webp" alt="Promoción 3">
+        <img src="ryj.jpg" alt="Promoción 4">
+      </div>
+      <button id="prevBtn">&#10094;</button>
+      <button id="nextBtn">&#10095;</button>
+    </div>
+
+    <section id="inicio">
+      <h2>Bienvenido a nuestra tienda</h2>
+      <p>Compra boletos de cine, conciertos, viajes y teatro al mejor precio.</p>
+    </section>
+
+    <!-- Catálogo -->
+    <section id="catalogo" class="grid-container">
+      <article class="producto">
+        <img src="cine.jpg" alt="Boleto de cine">
+        <h3>Boleto de Cine</h3>
+        <a href="compra-cine.html"><button>Comprar</button></a>
+        <p class="descripcion">Consigue los boletos para tus películas favoritas en los diferentes cines de tu ciudad.</p>
+      </article>
+      <article class="producto">
+        <img src="avion.webp" alt="Boleto de avión">
+        <h3>Boleto de Avión</h3>
+        <a href="compra-avion.html"><button>Comprar</button></a>
+        <p class="descripcion">Viaja a cualquier destino con los mejores precios en boletos de avión.</p>
+      </article>
+      <article class="producto">
+        <img src="concierto.webp" alt="Boleto de concierto">
+        <h3>Boleto de Concierto</h3>
+        <a href="compra-concierto.html"><button>Comprar</button></a>
+        <p class="descripcion">Disfruta de tus artistas favoritos en vivo con los mejores boletos para conciertos.</p>
+      </article>
+      <article class="producto">
+        <img src="teatro.jpg" alt="Boleto de teatro">
+        <h3>Boleto de Teatro</h3>
+        <a href="compra-teatro.html"><button>Comprar</button></a>
+        <p class="descripcion">Vive la emoción del teatro con boletos para las mejores obras en cartelera.</p>
+      </article>
+    </section>
+
+    <!-- Formulario de registro -->
+    <section id="formRegistro" style="display:none; background: rgba(0,0,0,0.7); padding: 20px; border-radius: 10px; max-width: 500px; margin: 30px auto;">
+      <h2 style="color: #ffeb3b;">Formulario de Registro</h2>
+      <form id="registroForm">
+        <input type="text" id="nombre" placeholder="Nombre" required><br><br>
+        <input type="email" id="correo" placeholder="Correo electrónico" required><br><br>
+        <input type="password" id="contrasena" placeholder="Contraseña" required><br><br>
+        <button type="submit">Registrarse</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <br>
+    <p>&copy; 2025 City Boleteria - Todos los derechos reservados</p>
+  </footer>
+
+  <!-- Script del slider con botones -->
+  <script>
+    $(document).ready(function () {
+      let index = 0;
+      const images = $('.slide-wrapper img');
+      const total = images.length;
+
+      function showSlide(newIndex) {
+        images.removeClass('active').css('left', '100%');
+        images.eq(newIndex).addClass('active').css('left', '0');
+      }
+
+      function nextSlide() {
+        index = (index + 1) % total;
+        showSlide(index);
+      }
+
+      function prevSlide() {
+        index = (index - 1 + total) % total;
+        showSlide(index);
+      }
+
+      $('#nextBtn').on('click', nextSlide);
+      $('#prevBtn').on('click', prevSlide);
+
+      setInterval(nextSlide, 5000);
+    });
+  </script>
+
+  <!-- Mostrar formulario de registro -->
+  <script>
+    document.getElementById("registroBtn").addEventListener("click", function(e) {
+      e.preventDefault();
+      const form = document.getElementById("formRegistro");
+      form.style.display = (form.style.display === "none") ? "block" : "none";
+    });
+  </script>
+
+  <!-- Validación del formulario -->
+  <script>
+    document.getElementById("registroForm").addEventListener("submit", function(e) {
+      const nombre = document.getElementById("nombre").value.trim();
+      const correo = document.getElementById("correo").value.trim();
+      const contrasena = document.getElementById("contrasena").value;
+
+      if (nombre === "" || correo === "" || contrasena.length < 6) {
+        e.preventDefault();
+        alert("Todos los campos son obligatorios y la contraseña debe tener al menos 6 caracteres.");
+      } else {
+        alert("Registro exitoso.");
+      }
+    });
+  </script>
+</body>
+</html>

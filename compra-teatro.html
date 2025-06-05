@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Compra - Boleto de Teatro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      background: url('fondo.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      position: relative;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 0;
+    }
+
+    .overlay-container {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      margin: 60px auto;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    h1 {
+      color: #ffeb3b;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+
+    select, input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #ff7e5f;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #feb47b;
+    }
+
+    a {
+      color: white;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <div class="overlay-container">
+    <h1>Compra de Boleto de Teatro</h1>
+
+    <form id="formCompraTeatro" onsubmit="return false;">
+      <label for="obra">Obra de Teatro:</label><br>
+      <select id="obra" name="obra" required>
+        <option value="">Selecciona una obra</option>
+        <option value="hamlet">Hamlet</option>
+        <option value="romeo">Romeo y Julieta</option>
+        <option value="donjuan">Don Juan Tenorio</option>
+      </select><br><br>
+
+      <label for="cantidadTeatro">Cantidad de boletos:</label>
+      <input type="number" id="cantidadTeatro" name="cantidad" min="1" value="1" required><br><br>
+
+      <p>Total a pagar: $<span id="totalTeatro">500</span></p>
+    </form>
+
+    <!-- Paypal -->
+    <div id="paypal-button-container"></div>
+    <script src="https://www.paypal.com/sdk/js?client-id=AcriuOOtYiEmrflPGgx2nyoABn9g5AgvkdltWO_a9PaTk7Lg55v_x-_-Lk0IFGnXvzhkBV3KDCNPFDMC&currency=MXN"></script>
+
+    <br>
+    <a href="index.html">Inicio</a>
+  </div>
+
+  <!-- Script -->
+  <script>
+    const precioTeatro = 500;
+
+    document.getElementById("cantidadTeatro").addEventListener("input", function () {
+      const cantidad = parseInt(this.value) || 1;
+      document.getElementById("totalTeatro").textContent = precioTeatro * cantidad;
+    });
+
+    // Validación con .test
+    function validarFormularioTeatro() {
+      const obra = document.getElementById("obra").value.trim();
+      const cantidad = document.getElementById("cantidadTeatro").value.trim();
+
+      const obraRegex = /^(hamlet|romeo|donjuan)$/i;
+      const cantidadRegex = /^[1-9][0-9]*$/;
+
+      if (!obraRegex.test(obra)) {
+        alert("Selecciona una obra válida.");
+        return false;
+      }
+
+      if (!cantidadRegex.test(cantidad)) {
+        alert("Ingresa una cantidad válida mayor a 0.");
+        return false;
+      }
+
+      return true;
+    }
+
+    // PayPal
+    paypal.Buttons({
+      createOrder: function(data, actions) {
+        if (!validarFormularioTeatro()) return;
+
+        const cantidad = parseInt(document.getElementById("cantidadTeatro").value);
+        const total = cantidad * precioTeatro;
+
+        return actions.order.create({
+          purchase_units: [{
+            amount: { value: total.toFixed(2) }
+          }]
+        });
+      },
+
+      onApprove: function(data, actions) {
+        redireccionarTeatro();
+      },
+
+      onCancel: function(data) {
+        redireccionarTeatro(); 
+      }
+    }).render('#paypal-button-container');
+
+    function redireccionarTeatro() {
+      const obra = document.getElementById("obra").value;
+      const cantidad = document.getElementById("cantidadTeatro").value;
+
+      if (!validarFormularioTeatro()) return;
+
+      window.location.href = `procesar_compra_teatro.php?obra=${encodeURIComponent(obra)}&cantidad=${cantidad}`;
+    }
+  </script>
+</body>
+</html>

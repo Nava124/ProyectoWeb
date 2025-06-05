@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Administrador - City Boletería</title>
+    <link rel="stylesheet" href="stylelogin.css">
+</head>
+<body>
+    
+    <main class="login-container">
+        <h2>Acceso Administrador</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Usuario" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <button type="submit">Iniciar Sesión</button>
+            <p id="errorMsg" style="color: red;"></p>
+        </form>
+    </main>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            
+            const user = "admin";
+            const pass = "1234";
+
+            const inputUser = document.getElementById("username").value;
+            const inputPass = document.getElementById("password").value;
+
+            if (inputUser === user && inputPass === pass) {
+                sessionStorage.setItem("adminLoggedIn", "true");
+                window.location.href = "admin.html";
+            } else {
+                document.getElementById("errorMsg").textContent = "Usuario o contraseña incorrectos";
+            }
+        });
+
+         
+    </script>
+</body>
+</html>
